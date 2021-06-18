@@ -14,7 +14,7 @@
         <a href="/" class="p-3">Home</a>
       </li>
       <li>
-        <a href="/Dashboard" class="p-3">Dashboard</a>
+        <a href="{{ route('dashboard') }}" class="p-3">Dashboard</a>
       </li>
       <li>
         <a href="/posts" class="p-3">Posts</a>
@@ -22,18 +22,27 @@
     </ul>
 
     <ul class="flex items-center">
-      <li>
-        <a href="/about" class="p-3">Aditya Prakarsa</a>
-      </li>
-      <li>
-        <a href="/login" class="p-3">Login</a>
-      </li>
-      <li>
-        <a href="{{ route('register') }}" class="p-3">Register</a>
-      </li>
-      <li>
-        <a href="/logout" class="p-3">logout</a>
-      </li>
+      @auth
+        <li>
+          <a href="/about" class="p-3">{{ auth()->user()->name }}</a>
+        </li>
+        <li>
+          <form action="{{ route('logout') }}" method="post" class="inline p-3">
+            @csrf
+            <button type="submit">logout</button>
+          </form>
+        </li>
+      @endauth
+
+      @guest
+        <li>
+          <a href="/login" class="p-3">Login</a>
+        </li>
+        <li>
+          <a href="{{ route('register') }}" class="p-3">Register</a>
+        </li>
+      @endguest
+
     </ul>
   </nav>
   @yield('content')
