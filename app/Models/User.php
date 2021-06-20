@@ -47,4 +47,9 @@ class User extends Authenticatable
         // user posts relationship
         return $this->hasMany(Post::class);
     }
+
+    public function likes()
+    {
+        return $this->hasMany(Like::class);
+    }
 }
