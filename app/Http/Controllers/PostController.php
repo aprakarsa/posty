@@ -9,14 +9,17 @@ class PostController extends Controller
 {
     public function index()
     {
-        $posts = Post::paginate(10);
+        // Eager loading => with()
+        // $posts = Post::orderBy('created_at', 'desc')->with(['user', 'likes'])->paginate(25);
+        $posts = Post::latest()->with(['user', 'likes'])->paginate(25);
 
         return view('posts.index', [
             'posts' => $posts
         ]);
     }
 
-    public function store(Request $request) {
+    public function store(Request $request)
+    {
         $this->validate($request, [
             'body' => 'required'
         ]);
@@ -31,6 +34,19 @@ class PostController extends Controller
         // ]);
 
         $request->user()->posts()->create($request->only('body'));
+
+        return back();
+    }
+
+    public function destroy(Post $post)
+    {
+        // if (!$post->ownedBy(auth()->user())) {
+        //     dd('not yours');
+        // }
+
+        $this->authorize('delete', $post);
+
+        $post->delete();
 
         return back();
     }
